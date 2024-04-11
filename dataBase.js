@@ -15,7 +15,8 @@ firebase.initializeApp({
 const db = firebase.firestore();
 const PORT = process.env.PORT || 3000;
 app.get("/",async(req,res)=>{
-  const data = req.body;
+  try{
+    const data = req.body;
   const jsonData = {
     data: data,
   };
@@ -24,6 +25,9 @@ app.get("/",async(req,res)=>{
     .doc(process.env.USER_ID)
     .update(jsonData);
   res.send(jsonData);
+  }catch (err){
+    res.send("Internal Error")
+  }
 })
 app.post("/upload", async (req, res) => {
   const data = req.body;
