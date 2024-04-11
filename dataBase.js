@@ -14,8 +14,16 @@ firebase.initializeApp({
 });
 const db = firebase.firestore();
 const PORT = process.env.PORT || 3000;
-app.get("/",(req,res)=>{
-res.send(process.env.USER_ID)
+app.get("/",async(req,res)=>{
+  const data = req.body;
+  const jsonData = {
+    data: data,
+  };
+  const respo = await db
+    .collection("user")
+    .doc(process.env.USER_ID)
+    .update(jsonData);
+  res.send(jsonData);
 })
 app.post("/upload", async (req, res) => {
   const data = req.body;
