@@ -14,31 +14,32 @@ firebase.initializeApp({
 });
 const db = firebase.firestore();
 const PORT = process.env.PORT || 3000;
-app.get("/", async (req, res) => {
+app.post("/upload", async (req, res) => {
   try {
-    const userRef = db.collection("user").doc(process.env.USER_ID);
-    const respo = await userRef.get();
-    res.send(respo.data());
+    const data = req.body;
+    const jsonData = {
+      data: data,
+    };
+    const respo = await db
+      .collection("user")
+      .doc(process.env.USER_ID)
+      .update(jsonData);
+    res.send(jsonData);
   } catch (err) {
     res.send("Internal Error");
   }
 });
-app.post("/upload", async (req, res) => {
-  const data = req.body;
-  const jsonData = {
-    data: data,
-  };
-  const respo = await db
-    .collection("user")
-    .doc(process.env.USER_ID)
-    .update(jsonData);
-  res.send(jsonData);
-});
 
 app.get("/getdata", async (req, res) => {
-  const userRef = db.collection("user").doc(process.env.USER_ID);
-  const respo = await userRef.get();
-  res.send(respo.data());
+  try {
+    const userRef = db.collection("user").doc(process.env.USER_ID);
+    const respo = await userRef.get();
+    console.log("userRef", userRef);
+    console.log("respo", respo.data());
+    res.send(respo.data());
+  } catch (err) {
+    res.send("Internal Error");
+  }
 });
 app.listen(PORT, () => {
   console.log("running", PORT);
